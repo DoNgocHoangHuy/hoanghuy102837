@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{%load static%}
+{% block title %}
+Sản phẩm
+{% endblock %}
+{% block content %}
+<div class="banner0   container-lg mt-4 ">
+  <div class="bannerinfos  container-xxl d-flex">
+    <i class="fa-solid fa-house fa-xxl"></i>
+    <i class="fa-solid fa-chevron-right"></i>
+    <h5>Sản phẩm </h5>
+  </div>
+</div>
+<div class="container-lg p-3">
+  <div class="row  d-flex justify-content-between  align-items-center ">
+    <div class="col-2"><a href="{% url 'product' %}?category=all" class="btn btn-primary w-100 {% if not current_category or current_category == 'all' %}active{% endif %}">Tất cả</a></div>
+    <div class="col-2"><a href="{% url 'product' %}?category=Áo" class="btn btn-success w-100 {% if current_category == 'Áo' %}active{% endif %}">Áo</a></div>
+    <div class="col-2"><a href="{% url 'product' %}?category=Quần" class="btn btn-outline-danger w-100 {% if current_category == 'Quần' %}active{% endif %}">Quần</a></div>
+    <div class="col-2"><a href="{% url 'product' %}?category=Đồng hồ" class="btn btn-warning w-100 {% if current_category == 'Đồng hồ' %}active{% endif %}">Đồng hồ</a></div>
+    <div class="col-2"><a href="{% url 'product' %}?category=Dây chuyền" class="btn btn-info w-100 {% if current_category == 'Dây chuyền' %}active{% endif %}">Dây chuyền</a></div>
+
+  </div>
+</div>
+<div class="container-lg mt-3">
+  <div class="row">
+    <div class="col-12">
+      <h4>
+        {% if current_category and current_category != 'all' %}
+          Sản phẩm thuộc danh mục: {{ current_category }} ({{ products|length }} sản phẩm)
+        {% else %}
+          Tất cả sản phẩm ({{ products|length }} sản phẩm)
+        {% endif %}
+      </h4>
+    </div>
+  </div>
+</div>
+
+<div id="sanpham" class="container-lg d-flex flex-wrap gap-2 justify-content-center" style="z-index: 1">
+  {% if products|length > 0 %}
+    {% for product in products %}
+  <div class="card  ">
+    <div class style="height: 320px;width: 100%;">
+      <div class="card-image">
+        <img src="{{product.image.url}}" alt="Card Image">
+        <div class="detail ">
+          <a href="{% url 'product_detail' product.id %}"
+            class=" mt-5 d-flex justify-content-center align-items-center text-center text-light btn btn-outline-danger text-decoration-none">
+            Xem chi tiết
+          </a>
+        </div>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">{{product.name}}</h3>
+      </div>
+
+    </div>
+    <div class="d-flex  justify-content-around align-content-center align-items-center py-3 ">
+      <p class=" p-0  m-0 card-description">{{product.price}}&nbsp;vnd</p>
+
+      <button class="btn btn-primary w-50 ">
+        <a class="text-light text-decoration-none " href="{% url 'add_to_cart' product.id %}">thêm vào giỏ hàng</a>
+      </button>
+    </div>
+  </div>
+    {% endfor %}
+  {% else %}
+  <div class="alert alert-info mt-3 text-center" style="width: 100%;">
+    <h5>Không có sản phẩm nào trong danh mục này.</h5>
+    <p>Vui lòng chọn danh mục khác hoặc quay lại <a href="{% url 'product' %}?category=all" class="alert-link">tất cả sản phẩm</a>.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% if messages %}
+<div id="notification" class="notification rounded-2  text-success border shadow ">
+  {% for message in messages %}
+  <b>{{ message }}</b>
+  {% endfor %}
+</div>
+<script>
+  // Lấy phần tử thông báo
+  var notification = document.getElementById('notification');
+
+  // Hiển thị thông báo
+  if(notification) {
+    notification.style.display = 'block';    
+  }
+
+  // Ẩn thông báo sau 1 giây
+  setTimeout(function () {
+    if(notification) {
+      notification.style.display = 'none';
+    }
+  }, 1000);
+</script>
+{% endif %}
+{% endblock %}
